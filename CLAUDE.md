@@ -4,19 +4,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is the **PivotPHP Skeleton** - a project template for quickly creating APIs with PivotPHP v1.2.0. It's designed to be used with `composer create-project pivotphp/skeleton my-api` to bootstrap new PivotPHP applications.
+This is the **PivotPHP Skeleton** - a project template for quickly creating APIs with PivotPHP v2.0.0. It's designed to be used with `composer create-project pivotphp/skeleton my-api` to bootstrap new PivotPHP applications.
+
+**Documentação oficial em PT-BR:** `website/pt/docs/` (internacionalização EN planejada)
 
 ### Purpose
 - Provides a complete, ready-to-use API project template
-- Demonstrates PivotPHP v1.2.0 features and best practices  
+- Demonstrates PivotPHP v2.0.0 features and best practices  
 - Includes automatic OpenAPI/Swagger documentation
 - Shows Express.js-style routing patterns
 - Provides example CRUD controllers and middleware
 
 ### Target Version
-- **PivotPHP Core**: v1.2.0 "Simplicity over Premature Optimization" edition
+- **PivotPHP Core**: v2.0.0 "Legacy Cleanup Edition" (Simplicity through Elimination)
 - **PHP**: ^8.1 (with PHP 8.4+ array callable support)
-- **Focus**: Educational and rapid prototyping
+- **Focus**: Educational and rapid prototyping with clean architecture
 
 ## Project Structure
 
