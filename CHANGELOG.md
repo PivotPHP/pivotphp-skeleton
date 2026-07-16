@@ -20,16 +20,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Example controllers and middleware
 - Configuration management
 - Development server integration
-- Docker-ready structure
 
 ### Features
-- 📚 Automatic OpenAPI 3.0 documentation at `/swagger`
+- 📚 Optional OpenAPI 3.0 documentation at `/swagger` — requires registering `ApiDocumentationMiddleware` in `public/index.php`, not enabled by default
 - 🚀 Express.js syntax for familiar development experience
-- 🎯 Array callable support for PHP 8.4+
+- 🎯 Array callable support (works from PHP 8.1+; the legacy `'Controller@method'` string syntax is what breaks under PHP 8.4+, not array callables)
 - ✅ Complete testing setup with PHPUnit
 - 🔧 Built-in development server (`composer serve`)
 - 🏗️ MVC project structure
-- 🌐 CORS middleware for API development
+- 🌐 `CorsMiddleware` example class included in `app/Middleware/` — not registered by default, opt-in
 - 📈 Performance optimizations included
 
 ### Performance

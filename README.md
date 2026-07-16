@@ -13,7 +13,7 @@
 This skeleton provides everything you need to start building modern PHP APIs:
 
 - 🎯 **PivotPHP v1.2.0** - Latest framework with educational focus
-- 📚 **Automatic OpenAPI/Swagger** - Interactive API documentation at `/swagger`
+- 📚 **Optional OpenAPI/Swagger** - Interactive API documentation at `/swagger`, opt-in (a few lines in `public/index.php` — see [Enabling API Documentation](#enabling-api-documentation-optional) below)
 - 🚀 **Express.js Syntax** - Familiar, intuitive routing patterns
 - 🏗️ **MVC Structure** - Controllers, middleware, and clean organization
 - ✅ **PHPUnit Testing** - Ready-to-use testing setup
@@ -39,14 +39,14 @@ Once running, you can access:
 |----------|-------------|
 | `GET /` | Welcome message with API info |
 | `GET /health` | Health check endpoint |
-| `GET /swagger` | 📚 **Interactive API Documentation** |
-| `GET /openapi.json` | OpenAPI 3.0 specification |
 | `GET /api/status` | API status and metadata |
 | `GET /api/users` | List all users (CRUD example) |
 | `POST /api/users` | Create new user |
 | `GET /api/users/{id}` | Get user by ID |
 | `PUT /api/users/{id}` | Update user |
 | `DELETE /api/users/{id}` | Delete user |
+
+`GET /swagger` and `GET /docs` (interactive API documentation and its OpenAPI 3.0 JSON spec) are **not** available out of the box — they require enabling `ApiDocumentationMiddleware` first. See [Enabling API Documentation](#enabling-api-documentation-optional) below.
 
 ## 🏗️ Project Structure
 
@@ -86,21 +86,30 @@ composer test
 composer test:coverage
 ```
 
-## 📚 Automatic API Documentation
+## 📚 Enabling API Documentation (optional)
 
-PivotPHP v1.2.0 automatically generates OpenAPI/Swagger documentation from your route definitions:
+The `@route`, `@summary`, `@tags` and `@response` PHPDoc comments you'll see above
+each route in `routes/api.php` are for human readers only — `pivotphp/core` does
+not parse them, and this skeleton does not register anything that would. By
+default, **`/swagger` and `/docs` are not available**.
+
+To enable them, register `PivotPHP\Core\Middleware\Http\ApiDocumentationMiddleware`
+in `public/index.php`, before `$app->run()`:
 
 ```php
-/**
- * @route GET /api/users
- * @summary List all users
- * @tags Users
- * @response 200 List of users
- */
-$app->get('/api/users', [UserController::class, 'index']);
+use PivotPHP\Core\Middleware\Http\ApiDocumentationMiddleware;
+
+$app->use(new ApiDocumentationMiddleware([
+    'docs_path' => '/docs',       // JSON OpenAPI 3.0 spec (note: not /openapi.json)
+    'swagger_path' => '/swagger', // Swagger UI
+]));
 ```
 
-Visit **http://localhost:8000/swagger** to see your interactive API docs! 📖✨
+Once registered, the middleware builds the OpenAPI spec from the routes actually
+registered on the `Router` at runtime — the PHPDoc blocks above are not read by it,
+they are purely documentation for developers browsing `routes/api.php`.
+
+After adding this, visit **http://localhost:8000/swagger** to see interactive API docs.
 
 ## 🎯 Express.js-Style Routing
 
@@ -118,10 +127,13 @@ $app->get('/users/{id}', function($req, $res) {
     return $res->json(['user_id' => $id]);
 });
 
-// Array callables (PHP 8.4+)
+// Array callables (work from PHP 8.1+; the legacy 'Controller@method' string
+// syntax is what breaks under PHP 8.4+, not array callables themselves)
 $app->post('/users', [UserController::class, 'store']);
 
-// Middleware
+// Middleware — CorsMiddleware ships as an example class in
+// app/Middleware/CorsMiddleware.php but is NOT registered anywhere by
+// default. Register it yourself in public/index.php before $app->run():
 $app->use(new CorsMiddleware());
 ```
 
@@ -160,12 +172,13 @@ class MyApiTest extends TestCase
 
 ## 📈 Performance
 
-This skeleton includes PivotPHP v1.2.0 with proven performance:
+Historical PivotPHP v1.2.0 benchmark figures (Docker-validated at the time), not
+revalidated against this skeleton or the current `pivotphp/core` release line —
+treat as indicative, not a guarantee:
 
 - **2,122 req/sec** peak HTTP performance
 - **3.6M ops/sec** OpenAPI generation
-- **Docker validated** benchmarks
-- **Educational focus** with maintained performance
+- **Docker validated** benchmarks (as of the v1.2.0 release)
 
 ## 🚀 Next Steps
 
