@@ -115,6 +115,7 @@ if (!file_exists($logFile)) {
 echo "\n🎉 PivotPHP Skeleton setup complete!\n\n";
 
 echo "🚀 Quick Start:\n";
+echo "  cd " . basename(getcwd()) . "\n";
 echo "  composer serve     # Start development server\n";
 echo "  composer test      # Run tests\n";
 echo "\n";
@@ -129,14 +130,10 @@ echo "\n";
 echo "🔧 Features available:\n";
 echo "  ✅ Automatic OpenAPI/Swagger documentation\n";
 echo "  ✅ Express.js-style routing syntax\n";
-echo "  ✅ Array callable support (PHP 8.4+)\n";
+echo "  ✅ Array callable support (PHP 8.1+)\n";
 echo "  ✅ Built-in CORS middleware\n";
 echo "  ✅ Example CRUD controllers\n";
 echo "  ✅ PHPUnit testing setup\n";
 echo "\n";
-
-echo "🚀 Start coding your API with:\n";
-echo "  cd " . basename(getcwd()) . "\n";
-echo "  composer serve\n\n";
 
 echo "Happy coding with PivotPHP v2.2.0! 🎯\n\n";
