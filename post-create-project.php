@@ -7,7 +7,7 @@ declare(strict_types=1);
  * Runs after composer create-project to setup the skeleton
  */
 
-echo "\n🚀 Setting up your PivotPHP v1.2.0 project...\n\n";
+echo "\n🚀 Setting up your PivotPHP v2.2.0 project...\n\n";
 
 // Get current directory
 $currentDir = getcwd();
@@ -139,4 +139,4 @@ echo "🚀 Start coding your API with:\n";
 echo "  cd " . basename(getcwd()) . "\n";
 echo "  composer serve\n\n";
 
-echo "Happy coding with PivotPHP v1.2.0! 🎯\n\n";
+echo "Happy coding with PivotPHP v2.2.0! 🎯\n\n";

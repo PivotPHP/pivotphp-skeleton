@@ -5,6 +5,17 @@ All notable changes to the PivotPHP Skeleton project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-10-08
+
+### Changed
+- Target **PivotPHP Core v2.2.0** (`pivotphp/core: ^2.2`) — brace route parameters
+  (`{id}`), array callables with instance methods, and `Request::body()` now work.
+- Update all framework version references (config, routes, controllers, README).
+
+### Fixed
+- `public/index.php` used the non-existent `PivotPHP\Core\Application` class — now
+  uses the canonical `PivotPHP\Core\Core\Application`.
+
 ## [1.0.0] - 2025-07-21
 
 ### Added

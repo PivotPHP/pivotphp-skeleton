@@ -1,18 +1,18 @@
 # PivotPHP Skeleton
 
-**The fastest way to start building APIs with PivotPHP v1.2.0**
+**The fastest way to start building APIs with PivotPHP v2.2.0**
 
-[![PivotPHP](https://img.shields.io/badge/PivotPHP-v1.2.0-blue.svg)](https://github.com/PivotPHP/pivotphp-core)
+[![PivotPHP](https://img.shields.io/badge/PivotPHP-v2.2.0-blue.svg)](https://github.com/PivotPHP/pivotphp-core)
 [![PHP Version](https://img.shields.io/badge/PHP-^8.1-777BB4.svg)](https://php.net)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-> 🚀 **"Simplicity over Premature Optimization"** - PivotPHP v1.2.0 Edition
+> 🚀 **"Route Syntax & DX Edition"** - PivotPHP v2.2.0 Edition
 
 ## ✨ What's Included
 
 This skeleton provides everything you need to start building modern PHP APIs:
 
-- 🎯 **PivotPHP v1.2.0** - Latest framework with educational focus
+- 🎯 **PivotPHP v2.2.0** - Latest framework with educational focus
 - 📚 **Optional OpenAPI/Swagger** - Interactive API documentation at `/swagger`, opt-in (a few lines in `public/index.php` — see [Enabling API Documentation](#enabling-api-documentation-optional) below)
 - 🚀 **Express.js Syntax** - Familiar, intuitive routing patterns
 - 🏗️ **MVC Structure** - Controllers, middleware, and clean organization

@@ -23,8 +23,8 @@ class ApiController
             'api' => [
                 'name' => 'PivotPHP Skeleton API',
                 'version' => '1.0.0',
-                'framework' => 'PivotPHP v1.2.0',
-                'edition' => 'Simplicity over Premature Optimization'
+                'framework' => 'PivotPHP v2.2.0',
+                'edition' => 'Route Syntax & DX Edition'
             ],
             'features' => [
                 'automatic_openapi' => true,

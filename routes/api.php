@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * API Routes for PivotPHP v1.2.0 Skeleton
+ * API Routes for PivotPHP v2.2.0 Skeleton
  * Define your API endpoints here
  */
 
@@ -19,10 +19,10 @@ use App\Controllers\UserController;
  */
 $app->get('/', function($req, $res) {
     return $res->json([
-        'message' => 'Welcome to PivotPHP v1.2.0!',
+        'message' => 'Welcome to PivotPHP v2.2.0!',
         'framework' => 'PivotPHP',
-        'version' => '1.2.0',
-        'edition' => 'Simplicity over Premature Optimization',
+        'version' => '2.2.0',
+        'edition' => 'Route Syntax & DX Edition',
         'features' => [
             'automatic_openapi_docs' => '/swagger',
             'openapi_spec' => '/openapi.json',
@@ -48,7 +48,7 @@ $app->get('/', function($req, $res) {
 $app->get('/health', function($req, $res) {
     return $res->json([
         'status' => 'healthy',
-        'framework' => 'PivotPHP v1.2.0',
+        'framework' => 'PivotPHP v2.2.0',
         'timestamp' => date('c'),
         'uptime' => 'ready',
         'features' => [
