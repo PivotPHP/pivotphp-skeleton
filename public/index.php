@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * PivotPHP v1.2.0 Skeleton Application
+ * PivotPHP v2.2.0 Skeleton Application
  * Entry point for your new API project
  */
 

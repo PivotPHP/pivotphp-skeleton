@@ -32,7 +32,7 @@ class ApiTest extends TestCase
         $this->assertEquals('PivotPHP Skeleton API', $config['name']);
         $this->assertEquals('1.0.0', $config['version']);
         $this->assertEquals('PivotPHP', $config['framework']['name']);
-        $this->assertEquals('1.2.0', $config['framework']['version']);
+        $this->assertEquals('2.2.0', $config['framework']['version']);
     }
 
     /**

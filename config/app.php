@@ -17,15 +17,15 @@ return [
     // Framework settings
     'framework' => [
         'name' => 'PivotPHP',
-        'version' => '1.2.0',
-        'edition' => 'Simplicity over Premature Optimization'
+        'version' => '2.2.0',
+        'edition' => 'Route Syntax & DX Edition'
     ],
     
     // OpenAPI/Swagger settings
     'openapi' => [
         'enabled' => true,
         'title' => 'PivotPHP Skeleton API',
-        'description' => 'Example API built with PivotPHP v1.2.0 skeleton',
+        'description' => 'Example API built with PivotPHP v2.2.0 skeleton',
         'version' => '1.0.0',
         'contact' => [
             'name' => 'API Support',
