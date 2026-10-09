@@ -24,14 +24,11 @@ $app->get('/', function($req, $res) {
         'version' => '2.2.0',
         'edition' => 'Route Syntax & DX Edition',
         'features' => [
-            'automatic_openapi_docs' => '/swagger',
-            'openapi_spec' => '/openapi.json',
             'health_check' => '/health'
         ],
         'performance' => [
             'http_peak_rps' => 2122,
             'http_average_rps' => 1418,
-            'openapi_generation_ops' => '3.6M',
             'docker_validated' => true
         ],
         'timestamp' => date('c')
@@ -50,11 +47,7 @@ $app->get('/health', function($req, $res) {
         'status' => 'healthy',
         'framework' => 'PivotPHP v2.2.0',
         'timestamp' => date('c'),
-        'uptime' => 'ready',
-        'features' => [
-            'openapi' => 'enabled',
-            'swagger_ui' => 'available'
-        ]
+        'uptime' => 'ready'
     ]);
 });
 
