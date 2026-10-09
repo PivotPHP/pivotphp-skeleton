@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use PivotPHP\Core\Application;
+use PivotPHP\Core\Core\Application;
 
 // Create PivotPHP application
 $app = Application::create();
