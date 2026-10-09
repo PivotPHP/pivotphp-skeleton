@@ -5,6 +5,13 @@ All notable changes to the PivotPHP Skeleton project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-10-09
+
+### Fixed
+- Removed misleading claims that `/swagger` and `/openapi.json` are available (they are
+  opt-in and require `ApiDocumentationMiddleware`, not registered by default).
+- Clarified `cd <project>` in the create-project Quick Start.
+
 ## [1.1.0] - 2026-10-08
 
 ### Changed
