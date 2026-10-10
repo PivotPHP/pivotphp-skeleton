@@ -3,120 +3,33 @@
 declare(strict_types=1);
 
 /**
- * API Routes for PivotPHP v2.2.0 Skeleton
- * Define your API endpoints here
+ * API routes. $app is the PivotPHP\Core\Core\Application built in bootstrap/app.php.
+ *
+ * Handlers receive PivotPHP\Http\ExpressRequest ($req) and ExpressResponse ($res) and must
+ * return the response.
  */
 
 use App\Controllers\ApiController;
 use App\Controllers\UserController;
+use PivotPHP\Core\Core\Application;
 
-/**
- * Welcome endpoint
- * @route GET /
- * @summary Welcome message for the API
- * @tags Welcome
- * @response 200 Welcome message
- */
-$app->get('/', function($req, $res) {
-    return $res->json([
-        'message' => 'Welcome to PivotPHP v2.2.0!',
-        'framework' => 'PivotPHP',
-        'version' => '2.2.0',
-        'edition' => 'Route Syntax & DX Edition',
-        'features' => [
-            'health_check' => '/health'
-        ],
-        'performance' => [
-            'http_peak_rps' => 2122,
-            'http_average_rps' => 1418,
-            'docker_validated' => true
-        ],
-        'timestamp' => date('c')
-    ]);
-});
+/** @var Application $app */
 
-/**
- * Health check endpoint
- * @route GET /health
- * @summary Health check for monitoring
- * @tags Health
- * @response 200 Health status
- */
-$app->get('/health', function($req, $res) {
-    return $res->json([
-        'status' => 'healthy',
-        'framework' => 'PivotPHP v2.2.0',
-        'timestamp' => date('c'),
-        'uptime' => 'ready'
-    ]);
-});
+$app->get('/', fn ($req, $res) => $res->json([
+    'message' => 'Welcome to your PivotPHP API',
+    'framework' => 'PivotPHP ' . Application::VERSION,
+    'endpoints' => ['/health', '/api/status', '/api/users'],
+]));
 
-/**
- * API status endpoint
- * @route GET /api/status
- * @summary API status and metadata
- * @tags API
- * @response 200 API status information
- */
+$app->get('/health', fn ($req, $res) => $res->json([
+    'status' => 'healthy',
+    'timestamp' => date('c'),
+]));
+
 $app->get('/api/status', [ApiController::class, 'status']);
 
-/**
- * Users endpoints
- * @route GET /api/users
- * @summary List all users
- * @tags Users
- * @response 200 List of users
- */
 $app->get('/api/users', [UserController::class, 'index']);
-
-/**
- * @route GET /api/users/{id}
- * @summary Get user by ID
- * @tags Users
- * @parameter {integer} id.path.required - User ID
- * @response 200 User details
- * @response 404 User not found
- */
-$app->get('/api/users/{id}', [UserController::class, 'show']);
-
-/**
- * @route POST /api/users
- * @summary Create new user
- * @tags Users
- * @parameter {object} body.body.required - User data
- * @response 201 User created successfully
- * @response 400 Invalid input
- */
 $app->post('/api/users', [UserController::class, 'store']);
-
-/**
- * @route PUT /api/users/{id}
- * @summary Update user
- * @tags Users
- * @parameter {integer} id.path.required - User ID
- * @parameter {object} body.body.required - Updated user data
- * @response 200 User updated successfully
- * @response 404 User not found
- */
-$app->put('/api/users/{id}', [UserController::class, 'update']);
-
-/**
- * @route DELETE /api/users/{id}
- * @summary Delete user
- * @tags Users
- * @parameter {integer} id.path.required - User ID
- * @response 204 User deleted successfully
- * @response 404 User not found
- */
-$app->delete('/api/users/{id}', [UserController::class, 'destroy']);
-
-/**
- * Example error endpoint for testing
- * @route GET /api/error
- * @summary Trigger example error
- * @tags Testing
- * @response 500 Example error response
- */
-$app->get('/api/error', function($req, $res) {
-    throw new \Exception('This is an example error for testing purposes');
-});
+$app->get('/api/users/:id<\d+>', [UserController::class, 'show']);
+$app->put('/api/users/:id<\d+>', [UserController::class, 'update']);
+$app->delete('/api/users/:id<\d+>', [UserController::class, 'destroy']);

@@ -1,2 +1,11 @@
+/vendor/
+composer.lock
+.env
+/coverage/
+/.phpunit.cache/
+.phpunit.result.cache
+.idea/
+.vscode/
+.DS_Store
 CLAUDE.md
 .claude/

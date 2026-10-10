@@ -4,65 +4,164 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
+use PivotPHP\Core\Core\Application;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Basic API Tests
- * Example tests for the skeleton application
+ * Exercises the real application (bootstrap/app.php) through Application::handle().
  */
-class ApiTest extends TestCase
+final class ApiTest extends TestCase
 {
-    /**
-     * Test that we can run basic tests
-     */
-    public function testBasicAssertion(): void
+    private const ORIGIN = 'http://localhost:5173';
+
+    private Application $app;
+    private Psr17Factory $factory;
+
+    protected function setUp(): void
     {
-        $this->assertTrue(true);
-        $this->assertEquals(4, 2 + 2);
+        putenv('CORS_ALLOWED_ORIGINS=' . self::ORIGIN);
+        $_ENV['CORS_ALLOWED_ORIGINS'] = self::ORIGIN;
+
+        $this->app = require __DIR__ . '/../bootstrap/app.php';
+        $this->factory = new Psr17Factory();
+    }
+
+    protected function tearDown(): void
+    {
+        putenv('CORS_ALLOWED_ORIGINS');
+        unset($_ENV['CORS_ALLOWED_ORIGINS']);
     }
 
     /**
-     * Test application configuration
+     * @param array<string, string> $headers
+     * @param array<string, mixed>|null $json
      */
-    public function testConfiguration(): void
+    private function request(string $method, string $uri, ?array $json = null, array $headers = []): ResponseInterface
     {
-        $config = require __DIR__ . '/../config/app.php';
-        
-        $this->assertIsArray($config);
-        $this->assertEquals('PivotPHP Skeleton API', $config['name']);
-        $this->assertEquals('1.0.0', $config['version']);
-        $this->assertEquals('PivotPHP', $config['framework']['name']);
-        $this->assertEquals('2.2.0', $config['framework']['version']);
+        $request = $this->factory->createServerRequest($method, $uri);
+        foreach ($headers as $name => $value) {
+            $request = $request->withHeader($name, $value);
+        }
+        if ($json !== null) {
+            $request = $request
+                ->withHeader('Content-Type', 'application/json')
+                ->withBody($this->factory->createStream((string) json_encode($json)));
+        }
+
+        return $this->app->handle($request);
     }
 
     /**
-     * Test that required directories exist
+     * @return array<string, mixed>
      */
-    public function testDirectoryStructure(): void
+    private static function body(ResponseInterface $response): array
     {
-        $basePath = __DIR__ . '/..';
-        
-        $this->assertDirectoryExists($basePath . '/public');
-        $this->assertDirectoryExists($basePath . '/app');
-        $this->assertDirectoryExists($basePath . '/app/Controllers');
-        $this->assertDirectoryExists($basePath . '/app/Middleware');
-        $this->assertDirectoryExists($basePath . '/config');
-        $this->assertDirectoryExists($basePath . '/routes');
-        $this->assertDirectoryExists($basePath . '/storage');
-        $this->assertDirectoryExists($basePath . '/storage/logs');
+        $data = json_decode((string) $response->getBody(), true);
+
+        return is_array($data) ? $data : [];
+    }
+
+    public function testWelcomeAndHealth(): void
+    {
+        $welcome = $this->request('GET', '/');
+        $this->assertSame(200, $welcome->getStatusCode());
+        $this->assertSame('PivotPHP ' . Application::VERSION, self::body($welcome)['framework']);
+
+        $this->assertSame('healthy', self::body($this->request('GET', '/health'))['status']);
+    }
+
+    public function testStatusReadsConfiguration(): void
+    {
+        $body = self::body($this->request('GET', '/api/status'));
+
+        $this->assertSame('PivotPHP Skeleton API', $body['name']);
+        $this->assertSame('production', $body['environment']);
+    }
+
+    public function testListAndShowUsers(): void
+    {
+        $this->assertSame(3, self::body($this->request('GET', '/api/users'))['total']);
+        $this->assertSame('Jane Smith', self::body($this->request('GET', '/api/users/2'))['user']['name']);
+        $this->assertSame(404, $this->request('GET', '/api/users/99')->getStatusCode());
+        $this->assertSame(404, $this->request('GET', '/api/users/abc')->getStatusCode());
     }
 
     /**
-     * Test that required files exist
+     * SPEC-082: POST/PUT returned 500 because body() was treated as an array.
      */
-    public function testRequiredFiles(): void
+    public function testCreateUser(): void
     {
-        $basePath = __DIR__ . '/..';
-        
-        $this->assertFileExists($basePath . '/public/index.php');
-        $this->assertFileExists($basePath . '/routes/api.php');
-        $this->assertFileExists($basePath . '/config/app.php');
-        $this->assertFileExists($basePath . '/composer.json');
-        $this->assertFileExists($basePath . '/README.md');
+        $response = $this->request('POST', '/api/users', ['name' => 'Ana', 'email' => 'ana@example.com']);
+
+        $this->assertSame(201, $response->getStatusCode());
+        $this->assertSame('/api/users/4', $response->getHeaderLine('Location'));
+        $this->assertSame('Ana', self::body($response)['user']['name']);
+    }
+
+    public function testCreateUserValidation(): void
+    {
+        $response = $this->request('POST', '/api/users', ['name' => '', 'email' => 'not-an-email']);
+
+        $this->assertSame(422, $response->getStatusCode());
+        $this->assertArrayHasKey('name', self::body($response)['errors']);
+        $this->assertArrayHasKey('email', self::body($response)['errors']);
+    }
+
+    public function testUpdateAndDeleteUser(): void
+    {
+        $updated = $this->request('PUT', '/api/users/1', ['name' => 'John Updated']);
+        $this->assertSame(200, $updated->getStatusCode());
+        $this->assertSame('John Updated', self::body($updated)['user']['name']);
+        $this->assertSame('john@example.com', self::body($updated)['user']['email']);
+
+        $this->assertSame(404, $this->request('PUT', '/api/users/99', ['name' => 'X'])->getStatusCode());
+
+        $deleted = $this->request('DELETE', '/api/users/1');
+        $this->assertSame(204, $deleted->getStatusCode());
+        $this->assertSame('', (string) $deleted->getBody());
+    }
+
+    public function testMalformedJsonIsRejected(): void
+    {
+        $request = $this->factory->createServerRequest('POST', '/api/users')
+            ->withHeader('Content-Type', 'application/json')
+            ->withBody($this->factory->createStream('{invalid'));
+
+        $this->assertSame(400, $this->app->handle($request)->getStatusCode());
+    }
+
+    public function testWrongMethodReturns405(): void
+    {
+        $response = $this->request('PATCH', '/api/users');
+
+        $this->assertSame(405, $response->getStatusCode());
+        $this->assertStringContainsString('GET', $response->getHeaderLine('Allow'));
+    }
+
+    /**
+     * SPEC-084: debug is off by default — errors do not expose details.
+     */
+    public function testDebugIsOffByDefault(): void
+    {
+        $this->assertFalse($this->app->getConfig()->get('app.debug'));
+
+        $body = self::body($this->request('GET', '/api/users/1/missing'));
+        $this->assertArrayNotHasKey('trace', $body);
+    }
+
+    public function testCorsAllowsOnlyConfiguredOrigins(): void
+    {
+        $allowed = $this->request('OPTIONS', '/api/users', null, [
+            'Origin' => self::ORIGIN,
+            'Access-Control-Request-Method' => 'POST',
+            'Access-Control-Request-Headers' => 'Content-Type',
+        ]);
+        $this->assertSame(204, $allowed->getStatusCode());
+        $this->assertSame(self::ORIGIN, $allowed->getHeaderLine('Access-Control-Allow-Origin'));
+
+        $denied = $this->request('GET', '/api/users', null, ['Origin' => 'https://evil.example']);
+        $this->assertFalse($denied->hasHeader('Access-Control-Allow-Origin'));
     }
 }

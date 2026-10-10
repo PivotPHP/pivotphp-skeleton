@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    name: PHP ${{ matrix.php }} · ${{ matrix.deps }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php: '8.1'
+            deps: 'lowest'
+          - php: '8.3'
+            deps: 'highest'
+          - php: '8.4'
+            deps: 'highest'
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php }}
+        extensions: mbstring, json
+        coverage: none
+
+    - name: Validate composer.json
+      run: composer validate --strict
+
+    - name: Install dependencies
+      run: |
+        if [ "${{ matrix.deps }}" = "lowest" ]; then
+          composer update --prefer-lowest --prefer-stable --no-progress --no-interaction
+        else
+          composer update --prefer-stable --no-progress --no-interaction
+        fi
+
+    - name: Audit dependencies
+      run: composer audit
+
+    - name: Run PHPUnit
+      run: vendor/bin/phpunit
+
+    - name: Smoke test (built-in server)
+      run: |
+        php -S 127.0.0.1:8000 -t public > /dev/null 2>&1 &
+        sleep 1
+        curl -fsS http://127.0.0.1:8000/health
+        curl -fsS -o /dev/null -w '%{http_code}\n' -X POST http://127.0.0.1:8000/api/users \
+          -H 'Content-Type: application/json' -d '{"name":"Ana","email":"ana@example.com"}' | grep -q 201

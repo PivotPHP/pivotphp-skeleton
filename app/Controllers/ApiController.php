@@ -4,44 +4,27 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-/**
- * API Controller
- * Handles general API endpoints
- */
-class ApiController
+use PivotPHP\Core\Core\Application;
+use PivotPHP\Http\ExpressRequest;
+use PivotPHP\Http\ExpressResponse;
+use Psr\Http\Message\ResponseInterface;
+
+final class ApiController
 {
-    /**
-     * Get API status and metadata
-     * 
-     * @param mixed $req Request object
-     * @param mixed $res Response object
-     * @return mixed JSON response
-     */
-    public function status($req, $res)
+    public function __construct(private readonly Application $app)
     {
+    }
+
+    public function status(ExpressRequest $req, ExpressResponse $res): ResponseInterface
+    {
+        $config = $this->app->getConfig();
+
         return $res->json([
-            'api' => [
-                'name' => 'PivotPHP Skeleton API',
-                'version' => '1.0.0',
-                'framework' => 'PivotPHP v2.2.0',
-                'edition' => 'Route Syntax & DX Edition'
-            ],
-            'features' => [
-                'express_syntax' => true,
-                'array_callables' => true
-            ],
-            'performance' => [
-                'http_peak_rps' => 2122,
-                'docker_validated' => true
-            ],
-            'endpoints' => [
-                'welcome' => '/',
-                'health' => '/health',
-                'api_status' => '/api/status',
-                'users' => '/api/users'
-            ],
+            'name' => $config->get('app.name'),
+            'environment' => $config->get('app.env'),
+            'framework' => 'PivotPHP ' . Application::VERSION,
+            'php' => PHP_VERSION,
             'timestamp' => date('c'),
-            'server_time' => time()
         ]);
     }
 }
