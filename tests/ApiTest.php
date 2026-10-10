@@ -10,7 +10,7 @@ use PivotPHP\Core\Core\Application;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Exercises the real application (bootstrap/app.php) through Application::handle().
+ * Exercises the real application (config/bootstrap/app.php) through Application::handle().
  */
 final class ApiTest extends TestCase
 {
@@ -36,7 +36,7 @@ final class ApiTest extends TestCase
             $_ENV[$key] = $value;
         }
 
-        $this->app = require __DIR__ . '/../bootstrap/app.php';
+        $this->app = require __DIR__ . '/../config/bootstrap/app.php';
         $this->factory = new Psr17Factory();
     }
 
