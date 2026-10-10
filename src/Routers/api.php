@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * API routes. $app is the PivotPHP\Core\Core\Application built in bootstrap/app.php.
+ * API routes. $app is the PivotPHP\Core\Core\Application built in config/bootstrap/app.php.
  *
  * Handlers receive PivotPHP\Http\ExpressRequest ($req) and ExpressResponse ($res) and must
  * return the response.

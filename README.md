@@ -32,13 +32,18 @@ in `UserController` with your persistence layer.
 ## Structure
 
 ```
-app/Controllers/     ApiController (container-injected), UserController (CRUD example)
-bootstrap/app.php    builds the application: config, middlewares, controllers, routes
-config/app.php       app.* configuration, read from the environment
-public/index.php     HTTP entry point
-routes/api.php       routes
-tests/ApiTest.php    tests through the real application ($app->handle())
+config/
+    app.php              app.* configuration, read from the environment
+    bootstrap/app.php    builds the application: config, middlewares, controllers, routes
+public/index.php         HTTP entry point
+src/
+    Controllers/         ApiController (container-injected), UserController (CRUD example)
+    Routers/api.php      routes
+tests/ApiTest.php        tests through the real application ($app->handle())
 ```
+
+Every `config/*.php` is loaded by the core as a configuration file (returning an array). Scripts such
+as the bootstrap live in a subdirectory (`config/bootstrap/`), which the core does not scan.
 
 ## Configuration
 
@@ -54,7 +59,7 @@ tests/ApiTest.php    tests through the real application ($app->handle())
 ## Writing routes
 
 ```php
-// routes/api.php
+// src/Routers/api.php
 $app->get('/hello/:name', fn ($req, $res) => $res->json(['hello' => $req->param('name')]));
 
 $app->post('/items', function ($req, $res) {
@@ -65,7 +70,7 @@ $app->post('/items', function ($req, $res) {
 
 Handlers receive `PivotPHP\Http\ExpressRequest`/`ExpressResponse` and must return the response.
 Controllers are array callables (`[UserController::class, 'index']`); register controllers that need
-constructor dependencies in the container (see `bootstrap/app.php`).
+constructor dependencies in the container (see `config/bootstrap/app.php`).
 
 Security middlewares (CORS, security headers, JWT, CSRF, rate limiting) come from
 [`pivotphp/security`](https://github.com/PivotPHP/pivotphp-security); this template enables CORS.

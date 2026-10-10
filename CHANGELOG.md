@@ -5,6 +5,21 @@ All notable changes to the PivotPHP Skeleton project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.0] - 2026-10-10
+
+### Changed (breaking — template layout)
+
+- **New layout** (SPEC-107): `app/Controllers/` → `src/Controllers/`, `routes/api.php` →
+  `src/Routers/api.php`, `bootstrap/app.php` → `config/bootstrap/app.php`. PSR-4 now maps `App\` to
+  `src/` (namespaces unchanged). Projects already created are not affected; to adopt the layout in an
+  existing project, move the files and update `composer.json` (`"App\\": "src/"`) and the `require`
+  paths in `public/index.php` and the tests.
+
+### Added
+
+- `tests/ConfigLayoutTest.php`: every `config/*.php` must return a configuration array — the core loads
+  them all, so scripts (like the bootstrap) must live in a subdirectory.
+
 ## [3.0.0] - 2026-10-10
 
 ### Changed
