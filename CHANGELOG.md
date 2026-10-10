@@ -5,6 +5,15 @@ All notable changes to the PivotPHP Skeleton project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2026-10-10
+
+### Fixed
+
+- Tests no longer depend on the project's `.env`: they set `APP_ENV=testing`, `APP_DEBUG=false` and
+  `CORS_ALLOWED_ORIGINS` as real environment variables (which take precedence over `.env`). In a project
+  created with `create-project`, `testStatusReadsConfiguration` failed because `.env` sets
+  `APP_ENV=development`.
+
 ## [2.0.0] - 2026-10-10
 
 Template for the PivotPHP 4 ecosystem (SPEC-089).
