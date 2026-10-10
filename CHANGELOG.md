@@ -5,6 +5,15 @@ All notable changes to the PivotPHP Skeleton project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2026-10-10
+
+### Changed
+
+- **Requires `pivotphp/core: ^5.0`** (was `^4.1.1`), which brings `pivotphp/core-routing` 3.0: each
+  `Application` owns its router (SPEC-076). The template itself needs no code change — it only
+  registers routes through `$app` — but projects that call `Router::get()`/`Router::group()` statically
+  must move to `$app->get()`/`$app->group()` (see the core's `docs/MIGRATION_GUIDE.md`, "4.x → 5.0").
+
 ## [2.0.3] - 2026-10-10
 
 ### Changed
