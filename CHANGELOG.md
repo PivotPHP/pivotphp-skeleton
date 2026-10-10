@@ -5,6 +5,35 @@ All notable changes to the PivotPHP Skeleton project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-10-10
+
+Template for the PivotPHP 4 ecosystem (SPEC-089).
+
+### Changed
+
+- Requires **`pivotphp/core` ^4.0.1** (brings `pivotphp/http`, `pivotphp/core-routing` ^2.2 and
+  `pivotphp/security`); `composer create-project` installs again (SPEC-098).
+- Controllers use `ExpressRequest`/`ExpressResponse` (`$req->input()`, `$req->param()`) and return
+  proper status codes: `201` + `Location`, `204` without body, `404`, `422` with field errors.
+- New `bootstrap/app.php` builds the application for both `public/index.php` and the tests.
+- `config/app.php` is loaded (application created with its base path) and reads the environment;
+  `.env` is copied from `.env.example` on `create-project`.
+- CORS via `pivotphp/security` `CorsMiddleware`, restricted to `CORS_ALLOWED_ORIGINS`.
+
+### Fixed
+
+- `POST`/`PUT /api/users` returned 500 (`body()` treated as an array) (SPEC-082).
+- `config/` was never loaded, and debug defaulted to **on** when `APP_DEBUG` was unset, exposing stack
+  traces (SPEC-084). Debug is now off unless `APP_DEBUG=true`.
+- Tests depended on `storage/` (created only by `create-project`) and on a hard-coded framework version
+  (SPEC-083).
+
+### Removed
+
+- `App\Middleware\CorsMiddleware` (wildcard origin, preflight answered with 200 and a JSON body).
+- Unused configuration keys (`openapi`, `performance`, `security`, `logging`), the `storage/` layout and
+  hard-coded framework versions and performance figures.
+
 ## [1.1.1] - 2026-10-09
 
 ### Fixed
