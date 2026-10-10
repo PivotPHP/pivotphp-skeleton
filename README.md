@@ -1,6 +1,6 @@
 # PivotPHP Skeleton
 
-Project template for [PivotPHP](https://github.com/PivotPHP/pivotphp-core) 4 — an Express.js-style PHP
+Project template for [PivotPHP](https://github.com/PivotPHP/pivotphp-core) 5 — an Express.js-style PHP
 API on PSR-7/PSR-15.
 
 ## Quick start
