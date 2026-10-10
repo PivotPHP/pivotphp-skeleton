@@ -19,10 +19,22 @@ final class ApiTest extends TestCase
     private Application $app;
     private Psr17Factory $factory;
 
+    /**
+     * Real environment variables take precedence over .env, so the tests do not depend on the
+     * project's .env file.
+     */
+    private const ENV = [
+        'APP_ENV' => 'testing',
+        'APP_DEBUG' => 'false',
+        'CORS_ALLOWED_ORIGINS' => self::ORIGIN,
+    ];
+
     protected function setUp(): void
     {
-        putenv('CORS_ALLOWED_ORIGINS=' . self::ORIGIN);
-        $_ENV['CORS_ALLOWED_ORIGINS'] = self::ORIGIN;
+        foreach (self::ENV as $key => $value) {
+            putenv("{$key}={$value}");
+            $_ENV[$key] = $value;
+        }
 
         $this->app = require __DIR__ . '/../bootstrap/app.php';
         $this->factory = new Psr17Factory();
@@ -30,8 +42,10 @@ final class ApiTest extends TestCase
 
     protected function tearDown(): void
     {
-        putenv('CORS_ALLOWED_ORIGINS');
-        unset($_ENV['CORS_ALLOWED_ORIGINS']);
+        foreach (array_keys(self::ENV) as $key) {
+            putenv($key);
+            unset($_ENV[$key]);
+        }
     }
 
     /**
@@ -77,7 +91,7 @@ final class ApiTest extends TestCase
         $body = self::body($this->request('GET', '/api/status'));
 
         $this->assertSame('PivotPHP Skeleton API', $body['name']);
-        $this->assertSame('production', $body['environment']);
+        $this->assertSame('testing', $body['environment']);
     }
 
     public function testListAndShowUsers(): void

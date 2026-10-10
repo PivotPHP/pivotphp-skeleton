@@ -52,6 +52,11 @@ jobs:
     - name: Run PHPUnit
       run: vendor/bin/phpunit
 
+    - name: Run PHPUnit as a created project (with .env from .env.example)
+      run: |
+        cp .env.example .env
+        vendor/bin/phpunit
+
     - name: Smoke test (built-in server)
       run: |
         php -S 127.0.0.1:8000 -t public > /dev/null 2>&1 &
