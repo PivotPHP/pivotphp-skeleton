@@ -5,6 +5,15 @@ All notable changes to the PivotPHP Skeleton project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.0] - 2026-10-12
+
+### Changed
+
+- **Requires `pivotphp/core: ^5.1`** (was `^5.0`):
+  - Incorporates the new high-performance routing resolution engine from `pivotphp/core-routing: ^3.1` (SPEC-114).
+  - O(1) static route lookup and prefix bucketing for dynamic routes with zero regression.
+  - Precompiled immutable middleware pipeline (Chain of Responsibility) and concrete adapters.
+
 ## [4.0.0] - 2026-10-10
 
 ### Changed (breaking — template layout)
